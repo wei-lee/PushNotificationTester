@@ -26,6 +26,7 @@ var receive_push = function (notification) {
 function successCallback(e) {
   result.innerHTML="Device registered. Device token:<br>" + (e.deviceToken || e.devicePIN || e.apid) + '.<br><br>';
   result.innerHTML += "Now registering with UrbanAirship...<br>";
+  e.ts = new Date().getTime();
   $fh.act({act:'registerUA', req:e}, function(res){
     if(res.result == 'ok'){
       result.innerHTML += "Registration Finishied.<br>";
@@ -51,7 +52,7 @@ function registerAPN() {
 }
 
 function broadcastMessage(){
-  $fh.act({act:'pushMessages'}, function(res){
+  $fh.act({act:'pushMessages', req:{ts: new Date().getTime()}}, function(res){
     result.innerHTML += "Message sent";
   })
 }
