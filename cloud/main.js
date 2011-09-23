@@ -1,25 +1,29 @@
-var UA = {};
-UA.HOST = "https://go.urbanairship.com:443/"; //TODO: figure out why we need to specify the port number here?
-UA.APP_KEY = "BH8OW8AVR8-4YHZya5RlFw";
-UA.APP_SECRET = "W-p8HmuVQVC3A-20nptpsw";
-
 function registerUA(){
-  var deviceId, path;
+  var deviceId, platfrom;
   if($params.deviceToken){
     deviceId = $params.deviceToken;
-    path = "api/device_tokens/";
+    platform = "ios";
   } else if($params.devicePIN){
     deviceId = $params.devicePIN;
-    path = "api/device_pins/";
+    platform = "blackberry";
+  } else if($params.apid){
+    deviceId = $params.apid;
+    platform = "android";
   }
   $fh.log({message: 'receive device id : ' + deviceId});
-  var url = UA.HOST + path + deviceId;
-  var res = $fh.web({url: url, method:'PUT', auth:{username:UA.APP_KEY, password:UA.APP_SECRET}});
-  $fh.log({message:'UA register response : ' + $fh.stringify(res)});
-  var status = res.status;
-  if(status == 200 || status == 201){
-    return {result:'ok'};
-  } else {
-    return {result:'error'};
-  }
+  var res = $fh.push({'act':'register', 'type':'dev', 'params':{'id':deviceId, 'platform':platform}});
+  $fh.log({'message':'UA register response : ' + $fh.stringify(res)});
+  return res;
+}
+
+function pushMessages(){
+  var message = "hello from FH";
+  var ios_message = {'aps':{'alert':message}};
+  var android_message = {'android':{'alert':message}};
+  var blackberry_message = {'blackberry':{'content-type':'text/plain', 'body':message}};
+  var res_ios = $fh.push({'act':'broadcast', 'type':'dev', 'params':ios_message});
+  $fh.log({'message':'res for ios broadcast: ' + $fh.stringify(res_ios)});
+  var res_android = $fh.push({'act':'broadcast', 'type':'dev', 'params':android_message});
+  $fh.log({'message':'res for android broadcast: ' + $fh.stringify(res_android)});
+  return {'result': 'ok'};
 }
