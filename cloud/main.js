@@ -1,3 +1,6 @@
+/**
+ * Register a device to Urbanairship
+ */
 function registerUA(){
   var deviceId, platfrom;
   if($params.deviceToken){
@@ -10,20 +13,24 @@ function registerUA(){
     deviceId = $params.apid;
     platform = "android";
   }
-  $fh.log({message: 'receive device id : ' + deviceId});
+  /**
+   * Urbanairship API supports tagging a device. 
+   * To do that, you can pass an extra parameter called "data" with the content specified in http://urbanairship.com/docs/push.html#registration
+   */
   var res = $fh.push({'act':'register', 'type':'dev', 'params':{'id':deviceId, 'platform':platform}});
-  $fh.log({'message':'UA register response : ' + $fh.stringify(res)});
   return res;
 }
 
 function pushMessages(){
   var message = "hello from FH";
+  /**
+   * Broadcast a message to all the devices. 
+   * The format for each platform is different. See http://urbanairship.com/docs/ for API details for each platform.
+   */
   var ios_message = {'aps':{'alert':message}};
   var android_message = {'android':{'alert':message}};
   var blackberry_message = {'blackberry':{'content-type':'text/plain', 'body':message}};
   var res_ios = $fh.push({'act':'broadcast', 'type':'dev', 'params':ios_message});
-  $fh.log({'message':'res for ios broadcast: ' + $fh.stringify(res_ios)});
   var res_android = $fh.push({'act':'broadcast', 'type':'dev', 'params':android_message});
-  $fh.log({'message':'res for android broadcast: ' + $fh.stringify(res_android)});
   return {'result': 'ok'};
 }
