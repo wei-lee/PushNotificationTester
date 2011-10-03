@@ -2,9 +2,9 @@
  *  Push services settings for Blackberry. You need to register your app to use Blackberry's Push Service. See https://www.blackberry.com/profile/?eventId=8121 for details. 
  *  You don't need those value if the app doesn't need to be run on Blackberry.
  */
-var bb_push_port = "<PORT NUMBER>";
-var bb_push_appId = "<ASSIGNED APP ID>";
-var bb_push_serverUrl = "<ASSIGNED SERVER URL>";
+var bb_push_port = "30308";
+var bb_push_appId = "80303-s67ll735e3D0576O61a27D6441h63l6476";
+var bb_push_serverUrl = "http://pushapi.eval.blackberry.com";
 
 $fh.ready({}, function(){
   /**
